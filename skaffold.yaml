@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/* # watch all these files
+build:
+  local:
+    push: false # when we build an image dont try to push it to docker hub by default
+  artifacts:
+    - image: rusaf/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync: ## how to handle the files in our dir
+        manual:
+          - src: 'src/**/*.ts' # set of files skaffold needs to watch. Go to the src dir and get all the files with the extension of .ts
+            dest: .

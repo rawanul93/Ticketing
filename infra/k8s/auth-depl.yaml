@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1 # number of pods in a particular image
+  selector: # take a look at all the created pods and find all the labels with app:posts
+    matchLabels:
+      app: auth
+  template: # is the exact specification of the pod we want this deployment to create using
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: rusaf/auth
+--- ## Cluster IP config
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
